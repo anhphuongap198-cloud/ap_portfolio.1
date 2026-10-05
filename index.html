@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-black">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Measured — Nguyễn Thị Anh Phương Portfolio</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+            helvetica: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: 'Helvetica Neue Roman';
+      src: local('Helvetica Neue'), local('HelveticaNeue-Roman');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    .font-helvetica-neue {
+      font-family: 'Helvetica Neue Roman', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .font-instrument {
+      font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+    }
+
+    /* Exact Liquid Glass CSS Effect */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Enhanced Liquid Glass for Modals */
+    .liquid-glass-modal {
+      background: rgba(12, 12, 14, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      position: relative;
+    }
+    .liquid-glass-modal::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.08) 25%,
+        rgba(255,255,255,0) 50%, rgba(255,255,255,0.08) 75%,
+        rgba(255,255,255,0.2) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Video reveal clipping */
+    .video-reveal-container {
+      clip-path: inset(40% 0 0 0);
+      -webkit-clip-path: inset(40% 0 0 0);
+    }
+
+    /* Mobile Menu Animation */
+    .menu-item-enter {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.18, 1), opacity 0.6s cubic-bezier(0.77, 0, 0.18, 1);
+    }
+    .menu-item-enter.show {
+      opacity: 0.95;
+      transform: translateY(0);
+    }
+
+    .close-btn-rot {
+      transition: transform 0.5s cubic-bezier(0.77, 0, 0.18, 1), opacity 0.5s ease;
+      transform: scale(0.8) rotate(-90deg);
+    }
+    .close-btn-rot.show {
+      transform: scale(1) rotate(0deg);
+    }
+
+    /* Custom Scrollbar for Modal */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-white text-white overflow-hidden select-none m-0 p-0 h-screen w-screen">
+
+  <!-- ==================== NAVIGATION (z-50, fixed) ==================== -->
+  <header class="fixed top-0 left-0 w-full z-50 px-6 sm:px-10 py-6 flex items-center justify-between pointer-events-none">
+    
+    <!-- Logo (Top-Left) -->
+    <div class="flex items-center gap-3.5 pointer-events-auto cursor-pointer group" onclick="openPortfolio('profile')">
+      <svg class="w-7 h-7 fill-white transition-transform duration-300 group-hover:scale-105" viewBox="0 0 256 256">
+        <path d="M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 96 95 L 63.5 128 L 64 128 L 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 64 L 64 0 L 192 0 Z M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z"></path>
+      </svg>
+      <div class="flex flex-col">
+        <span class="text-xs tracking-[0.2em] uppercase font-semibold text-white/90">MEASURED</span>
+        <span class="text-[10px] tracking-wider text-white/40 -mt-0.5">AP Dossier</span>
+      </div>
+    </div>
+
+    <!-- Desktop Center Pill Nav (Hidden on Mobile) -->
+    <nav class="hidden md:flex items-center liquid-glass rounded-full px-2 py-1.5 gap-1 pointer-events-auto">
+      <button onclick="openPortfolio('profile')" class="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-full transition-all duration-200 hover:bg-white/5">
+        Device
+      </button>
+      <button onclick="openPortfolio('experience')" class="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-full transition-all duration-200 hover:bg-white/5">
+        Real Stories
+      </button>
+      <button onclick="openPortfolio('education')" class="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-full transition-all duration-200 hover:bg-white/5">
+        Science
+      </button>
+      <button onclick="openPortfolio('skills')" class="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-full transition-all duration-200 hover:bg-white/5">
+        Plans
+      </button>
+      <button onclick="openPortfolio('contact')" class="px-4 py-1.5 text-sm font-medium text-white/70 hover:text-white rounded-full transition-all duration-200 hover:bg-white/5">
+        Reach Us
+      </button>
+    </nav>
+
+    <!-- Desktop CTA (Top-Right, Hidden on Mobile) -->
+    <div class="hidden md:flex items-center gap-3 pointer-events-auto">
+      <button onclick="openPortfolio('profile')" class="liquid-glass rounded-full px-5 py-2.5 flex items-center gap-2.5 text-sm font-medium text-white hover:bg-white/10 transition-all duration-300 group">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        <span>Reserve Yours</span>
+        <span class="text-xs text-white/40 group-hover:text-white/80 transition-colors">/ Hồ sơ AP</span>
+      </button>
+    </div>
+
+    <!-- Mobile Hamburger (Top-Right, Hidden md+) -->
+    <button id="mobileMenuBtn" onclick="toggleMobileMenu(true)" class="md:hidden liquid-glass rounded-full w-11 h-11 flex flex-col items-center justify-center gap-1.5 pointer-events-auto focus:outline-none">
+      <span class="w-5 h-[1.5px] bg-white rounded-full"></span>
+      <span class="w-3.5 h-[1.5px] bg-white rounded-full -ml-1.5"></span>
+    </button>
+  </header>
+
+
+  <!-- ==================== MOBILE FULLSCREEN MENU (z-55) ==================== -->
+  <div id="mobileMenu" class="fixed inset-0 z-[55] bg-[#0a0a0a] hidden flex-col justify-between p-8 sm:p-12 transition-opacity duration-300">
+    <!-- Close button (top-right) -->
+    <div class="flex justify-between items-center w-full">
+      <div class="flex items-center gap-2 text-white/60 text-xs tracking-widest uppercase">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+        Nguyễn Thị Anh Phương
+      </div>
+      <button id="mobileCloseBtn" onclick="toggleMobileMenu(false)" class="close-btn-rot liquid-glass rounded-full w-12 h-12 flex items-center justify-center relative">
+        <span class="absolute w-5 h-[1.5px] bg-white rotate-45"></span>
+        <span class="absolute w-5 h-[1.5px] bg-white -rotate-45"></span>
+      </button>
+    </div>
+
+    <!-- Nav Items Stacked Vertically -->
+    <div class="flex flex-col items-center justify-center gap-6 my-auto">
+      <button onclick="handleMobileNavClick('profile')" class="menu-item-enter text-3xl sm:text-4xl text-white/90 font-medium hover:text-white transition-colors" style="transition-delay: 100ms;">
+        Device
+      </button>
+      <button onclick="handleMobileNavClick('experience')" class="menu-item-enter text-3xl sm:text-4xl text-white/90 font-medium hover:text-white transition-colors" style="transition-delay: 160ms;">
+        Real Stories
+      </button>
+      <button onclick="handleMobileNavClick('education')" class="menu-item-enter text-3xl sm:text-4xl text-white/90 font-medium hover:text-white transition-colors" style="transition-delay: 220ms;">
+        Science
+      </button>
+      <button onclick="handleMobileNavClick('skills')" class="menu-item-enter text-3xl sm:text-4xl text-white/90 font-medium hover:text-white transition-colors" style="transition-delay: 280ms;">
+        Plans
+      </button>
+      <button onclick="handleMobileNavClick('contact')" class="menu-item-enter text-3xl sm:text-4xl text-white/90 font-medium hover:text-white transition-colors" style="transition-delay: 340ms;">
+        Reach Us
+      </button>
+    </div>
+
+    <!-- Mobile CTA -->
+    <div class="flex justify-center pb-4 menu-item-enter" style="transition-delay: 400ms;">
+      <button onclick="handleMobileNavClick('profile')" class="liquid-glass rounded-full px-8 py-3.5 flex items-center gap-3 text-base font-medium text-white">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        <span>Reserve Yours</span>
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ==================== HERO SECTION (100vh, overflow hidden) ==================== -->
+  <main id="heroSection" class="relative w-screen h-screen overflow-hidden font-helvetica-neue bg-black">
+
+    <!-- LAYER 1 — Grid Background (z-0, opacity 0.1) -->
+    <div id="gridBg" class="absolute inset-[-100px] z-0 opacity-10 pointer-events-none transition-transform will-change-transform">
+      <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#64748b" stroke-width="0.6"></path>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-pattern)"></rect>
+      </svg>
+    </div>
+
+    <!-- LAYER 2 — Background Image (z-10) -->
+    <div class="absolute inset-0 z-10 bg-center bg-cover bg-no-repeat pointer-events-none"
+         style="background-image: url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260713_140344_79e1296a-86d7-43fd-9b5f-63ffe560f291.png&w=1280&q=85');">
+    </div>
+
+    <!-- LAYER 3 — Hero Text (z-20) -->
+    <div class="absolute inset-x-0 z-20 flex flex-col items-center pointer-events-none top-20 sm:top-28 md:top-32 select-none px-4">
+      <h1 class="font-instrument uppercase text-white tracking-tight leading-[0.9] text-center drop-shadow-2xl text-[3.8rem] xs:text-[5rem] sm:text-[8rem] md:text-[11rem] lg:text-[14rem] whitespace-nowrap">
+        ANH PHƯƠNG
+      </h1>
+      <p class="text-white/40 tracking-[0.2em] sm:tracking-[0.3em] uppercase text-[10px] sm:text-xs mt-3 sm:mt-5 font-sans font-light text-center">
+        Personal Profile &bull; Accounting & Auditing &bull; Foreign Trade University
+      </p>
+    </div>
+
+    <!-- LAYER 4 — Overlay Image (z-25) -->
+    <img src="https://soft-zoom-63098134.figma.site/_assets/v11/3f10f1876e118f72a396e05a6c2d099569478272.png" 
+         alt="Overlay Atmosphere"
+         class="absolute inset-0 z-25 w-full h-full object-cover pointer-events-none" />
+
+    <!-- LAYER 5 — Spotlight Reveal (z-30) -->
+    <!-- The div below contains the FRONT_VIDEO and is masked by cursor-following radial gradient -->
+    <div id="spotlightRevealLayer" class="absolute inset-0 z-30 pointer-events-none video-reveal-container">
+      <video id="frontVideo" 
+             src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_162101_0d7498c5-29bb-47bf-a99f-2773c0a880a9.mp4" 
+             autoplay loop muted playsinline 
+             class="w-full h-full object-cover pointer-events-none">
+      </video>
+    </div>
+
+    <!-- Hidden canvas for spotlight mask gradient calculations -->
+    <canvas id="maskCanvas" class="hidden"></canvas>
+
+    <!-- Subtle Floating Profile Pill (Bottom Left Indicator) -->
+    <div class="absolute bottom-6 left-6 z-40 hidden sm:flex items-center gap-3">
+      <button onclick="openPortfolio('profile')" class="liquid-glass rounded-full px-4 py-2 flex items-center gap-2.5 text-xs text-white/80 hover:text-white transition-all">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span class="font-medium">Nguyễn Thị Anh Phương</span>
+        <span class="text-white/40">&bull; FTU Auditor</span>
+      </button>
+    </div>
+
+    <!-- Reveal Hint (Bottom Right Indicator) -->
+    <div class="absolute bottom-6 right-6 z-40 text-right pointer-events-none hidden sm:block">
+      <p class="text-[11px] text-white/40 tracking-wider uppercase font-light">
+        Hover bottom area to reveal video
+      </p>
+      <p class="text-[9px] text-white/20 mt-0.5">
+        Canvas Mask Radius: 260px &bull; Lerp: 0.1
+      </p>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== PERSONAL PORTFOLIO MODAL (z-60) ==================== -->
+  <div id="portfolioModal" class="fixed inset-0 z-[60] bg-black/70 backdrop-blur-md hidden items-center justify-center p-4 sm:p-6 transition-all duration-300">
+    <div class="liquid-glass-modal rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden text-white shadow-2xl border border-white/10 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 sm:px-8 py-5 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl liquid-glass flex items-center justify-center font-bold text-base text-white">
+            AP
+          </div>
+          <div>
+            <h2 class="text-lg sm:text-xl font-semibold text-white flex items-center gap-2">
+              Nguyễn Thị Anh Phương
+              <span class="text-[11px] font-normal px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Auditor &bull; FTU
+              </span>
+            </h2>
+            <p class="text-xs text-white/50">Hồ sơ năng lực & Triết lý nghề nghiệp</p>
+          </div>
+        </div>
+
+        <button onclick="closePortfolio()" class="liquid-glass w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-white/70 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs Inside Modal -->
+      <div class="px-6 sm:px-8 pt-3 pb-2 border-b border-white/5 flex gap-2 overflow-x-auto custom-scroll">
+        <button id="tab-btn-profile" onclick="switchTab('profile')" class="tab-btn px-4 py-2 rounded-full text-xs font-medium text-white bg-white/10 whitespace-nowrap transition-all">
+          Giới thiệu & Tổng quan
+        </button>
+        <button id="tab-btn-experience" onclick="switchTab('experience')" class="tab-btn px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 whitespace-nowrap transition-all">
+          Kinh nghiệm thực tế
+        </button>
+        <button id="tab-btn-education" onclick="switchTab('education')" class="tab-btn px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 whitespace-nowrap transition-all">
+          Học vấn & Con số
+        </button>
+        <button id="tab-btn-skills" onclick="switchTab('skills')" class="tab-btn px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 whitespace-nowrap transition-all">
+          Kỹ năng & Công cụ
+        </button>
+        <button id="tab-btn-contact" onclick="switchTab('contact')" class="tab-btn px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 whitespace-nowrap transition-all">
+          Thông tin liên hệ
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 sm:p-8 overflow-y-auto custom-scroll flex-1 text-sm space-y-6">
+
+        <!-- TAB 1: PROFILE & ABOUT -->
+        <div id="tab-content-profile" class="tab-pane space-y-6">
+          <!-- Slogan Quote Box -->
+          <div class="liquid-glass p-5 rounded-2xl border-l-2 border-emerald-400">
+            <p class="text-xs uppercase tracking-widest text-emerald-400 font-semibold mb-1">Triết lý cá nhân & Slogan</p>
+            <p class="text-base sm:text-lg font-serif italic text-white/90 leading-relaxed">
+              "Giao thoa giữa sự chuẩn xác của những con số và sự nhạy bén của tư duy dữ liệu – Nhìn thấu câu chuyện đằng sau mỗi báo cáo tài chính."
+            </p>
+          </div>
+
+          <!-- About Me Content -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold uppercase tracking-wider text-white/70">Tóm tắt bản thân</h3>
+            <p class="text-white/80 leading-relaxed font-light">
+              Chào bạn, mình là <strong class="text-white font-medium">Anh Phương</strong> – sinh viên ngành Kế toán - Kiểm toán tại Trường Đại học Ngoại thương (FTU). Tự nhận mình là một con người vừa logic vừa giàu cảm xúc, mình luôn bị cuốn hút bởi sự chuẩn xác của những con số cũng như tiềm năng khai phá giá trị từ các tập dữ liệu lớn.
+            </p>
+            <p class="text-white/80 leading-relaxed font-light">
+              Mục tiêu nghề nghiệp của mình là trở thành một <strong class="text-emerald-300 font-medium">Kiểm toán viên nhạy bén</strong>, không chỉ giỏi về nghiệp vụ tài chính - thuế mà còn làm chủ kĩ năng phân tích dữ liệu để đưa ra những góc nhìn kiểm toán sắc bén. Bên cạnh bức tranh công việc, mình nuôi dưỡng tâm hồn và sự cân bằng cuộc sống bằng niềm đam mê nghệ thuật – hát và chơi đàn, nơi rèn luyện cho mình sự kiên nhẫn, tỉ mỉ và khả năng cảm nhận tinh tế.
+            </p>
+          </div>
+
+          <!-- 3 Core Values -->
+          <div>
+            <h3 class="text-sm font-semibold uppercase tracking-wider text-white/70 mb-3">Giá trị cốt lõi & Thế mạnh</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="liquid-glass p-4 rounded-xl">
+                <div class="text-emerald-400 mb-2 font-mono text-xs">01 / MINDSET</div>
+                <h4 class="font-medium text-white mb-1.5">Data-driven Auditor</h4>
+                <p class="text-xs text-white/60 leading-relaxed">
+                  Nhạy bén phát hiện bất thường và tối ưu hóa quy trình kiểm tra số liệu nhờ công cụ dữ liệu hiện đại thay vì phương pháp thủ công.
+                </p>
+              </div>
+
+              <div class="liquid-glass p-4 rounded-xl">
+                <div class="text-emerald-400 mb-2 font-mono text-xs">02 / AGILITY</div>
+                <h4 class="font-medium text-white mb-1.5">Proactive Learning</h4>
+                <p class="text-xs text-white/60 leading-relaxed">
+                  Nền tảng FTU xuất sắc, chủ động cọ xát thực tế, liên tục cập nhật chuẩn mực kế toán - thuế mới và không ngại thử thách mới.
+                </p>
+              </div>
+
+              <div class="liquid-glass p-4 rounded-xl">
+                <div class="text-emerald-400 mb-2 font-mono text-xs">03 / CREATIVITY</div>
+                <h4 class="font-medium text-white mb-1.5">Art & Balance</h4>
+                <p class="text-xs text-white/60 leading-relaxed">
+                  Niềm đam mê âm nhạc rèn luyện tư duy linh hoạt, khả năng tập trung cao độ và góc nhìn đa chiều khi giải quyết vấn đề phức tạp.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: EXPERIENCE -->
+        <div id="tab-content-experience" class="tab-pane hidden space-y-6">
+          <div class="liquid-glass p-6 rounded-2xl relative overflow-hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <span class="text-xs text-emerald-400 font-mono tracking-wider">07/2026 – 10/2026 (3 tháng) &bull; Part-time</span>
+                <h3 class="text-lg font-semibold text-white">Thực tập sinh Kế toán Thuế</h3>
+                <p class="text-xs text-white/60">Công ty Cổ phần Tập đoàn Đầu tư Bảo Ngọc (Nhập khẩu & chế biến thực phẩm)</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-[11px] bg-white/10 text-white/80 self-start sm:self-auto">
+                Bảo Ngọc Group
+              </span>
+            </div>
+
+            <div class="space-y-3 mb-5">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-white/70">Nhiệm vụ chính:</h4>
+              <ul class="space-y-2 text-xs text-white/80 font-light">
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-400 mt-0.5">&bull;</span>
+                  <span><strong>Document & Data Processing:</strong> Tiếp nhận, kiểm tra tính hợp lệ, hợp pháp của bộ chứng từ xuất nhập khẩu thực phẩm (Hóa đơn, tờ khai hải quan, chứng từ thanh toán quốc tế) và thực hiện định khoản các nghiệp vụ phát sinh.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-400 mt-0.5">&bull;</span>
+                  <span><strong>Tax Declaration & Bookkeeping Support:</strong> Hỗ trợ lập các bảng kê hóa đơn mua vào - bán ra, rà soát đối chiếu số liệu tồn kho hàng nhập khẩu chế biến với sổ sách kế toán thuế.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-emerald-400 mt-0.5">&bull;</span>
+                  <span><strong>Data Processing Tools Application:</strong> Sử dụng Excel nâng cao để phân loại, chuẩn hóa và kiểm tra tính nhất quán của tập dữ liệu giao dịch lớn trong chuỗi cung ứng của tập đoàn.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="pt-4 border-t border-white/10">
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">Kỹ năng tích lũy:</h4>
+              <p class="text-xs text-white/70 leading-relaxed mb-3">
+                Kế toán thuế thực tế trong doanh nghiệp sản xuất & nhập khẩu thực phẩm &bull; Kỹ năng phân loại và xử lý dữ liệu chứng từ khối lượng lớn với độ chính xác cao &bull; Tinh thần trách nhiệm, cẩn trọng và bảo mật dữ liệu tài chính.
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-white/60">#Kế_toán_thuế</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-white/60">#Nhập_khẩu_thực_phẩm</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-white/60">#Định_khoản_nghiệp_vụ</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-white/60">#Kiểm_tra_chứng_từ</span>
+                <span class="px-2.5 py-1 rounded-md text-[11px] bg-white/5 text-emerald-400/80">#Excel_xử_lý_dữ_liệu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: EDUCATION & STATS -->
+        <div id="tab-content-education" class="tab-pane hidden space-y-6">
+          <!-- Quick Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="liquid-glass p-4 rounded-xl text-center">
+              <div class="text-2xl font-instrument text-emerald-400 font-bold">3</div>
+              <div class="text-[11px] text-white/50 mt-1">Con số chủ đạo (Life Path)</div>
+              <div class="text-[9px] text-white/30 mt-0.5">Sáng tạo & Truyền cảm hứng</div>
+            </div>
+
+            <div class="liquid-glass p-4 rounded-xl text-center">
+              <div class="text-2xl font-instrument text-white font-bold">3.5<span class="text-xs text-white/40">/4.0</span></div>
+              <div class="text-[11px] text-white/50 mt-1">Điểm GPA Tích lũy</div>
+              <div class="text-[9px] text-white/30 mt-0.5">Đại học Ngoại thương</div>
+            </div>
+
+            <div class="liquid-glass p-4 rounded-xl text-center">
+              <div class="text-2xl font-instrument text-white font-bold">7.0</div>
+              <div class="text-[11px] text-white/50 mt-1">Chứng chỉ IELTS</div>
+              <div class="text-[9px] text-white/30 mt-0.5">Tiếng Anh Tài chính - Kiểm toán</div>
+            </div>
+
+            <div class="liquid-glass p-4 rounded-xl text-center">
+              <div class="text-2xl font-instrument text-emerald-400 font-bold">2 Năm</div>
+              <div class="text-[11px] text-white/50 mt-1">Học bổng FTU</div>
+              <div class="text-[9px] text-white/30 mt-0.5">Khuyến khích học tập liên tiếp</div>
+            </div>
+          </div>
+
+          <!-- Academic Card -->
+          <div class="liquid-glass p-6 rounded-2xl space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-semibold text-white">Trường Đại học Ngoại thương (FTU)</h3>
+                <p class="text-xs text-emerald-400 font-mono">Chuyên ngành: Kế toán - Kiểm toán &bull; Niên khóa: 2023 - 2027</p>
+              </div>
+              <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Xuất sắc
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-white/5 border border-white/5 text-xs text-white/80">
+              <strong class="text-white">Thành tích nổi bật:</strong> Đạt Học bổng Khuyến khích học tập 2 năm liên tiếp (dành cho sinh viên có thành tích học tập và rèn luyện xuất sắc của Đại học Ngoại thương).
+            </div>
+
+            <div>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-white/70 mb-2">Môn học yêu thích & Điểm mạnh cốt lõi:</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="p-3 rounded-xl bg-black/40 border border-white/5">
+                  <div class="font-medium text-white mb-1">Kiểm toán Báo cáo tài chính</div>
+                  <div class="text-white/60">Nắm vững quy trình kiểm toán, kỹ thuật lấy mẫu và kiểm tra soát xét số liệu chuyên sâu.</div>
+                </div>
+                <div class="p-3 rounded-xl bg-black/40 border border-white/5">
+                  <div class="font-medium text-white mb-1">Kế toán Thuế</div>
+                  <div class="text-white/60">Am hiểu quy định pháp luật thuế hiện hành, quy trình kê khai và quyết toán thuế cho doanh nghiệp.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SKILLS -->
+        <div id="tab-content-skills" class="tab-pane hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Hard Skills -->
+            <div class="liquid-glass p-5 rounded-2xl space-y-3">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Hard Skills (Kỹ năng chuyên môn)</h3>
+              <ul class="space-y-2 text-xs text-white/80">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Định khoản nghiệp vụ kế toán & Soạn thảo chứng từ, hợp đồng thương mại.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Sắp xếp, chuẩn hóa và xử lý dữ liệu tài chính đầu vào / đầu ra.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Am hiểu quy trình Kế toán Thuế & Kiểm toán Báo cáo tài chính.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Soft Skills -->
+            <div class="liquid-glass p-5 rounded-2xl space-y-3">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Soft Skills (Kỹ năng mềm)</h3>
+              <ul class="space-y-2 text-xs text-white/80">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Làm việc nhóm hiệu quả & Quản lý thời gian tốt.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Kỹ năng giao tiếp, thuyết trình và trình bày báo cáo chỉn chu.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400 mt-0.5"></i>
+                  <span>Tư duy phản biện (Critical thinking) và cẩn trọng trong xử lý chi tiết.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Tools & Software -->
+            <div class="liquid-glass p-5 rounded-2xl space-y-3">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Software & Data Tools</h3>
+              <div class="space-y-2 text-xs text-white/80">
+                <div>
+                  <div class="flex justify-between font-medium text-white mb-1">
+                    <span>Microsoft Excel (Nâng cao)</span>
+                    <span class="text-emerald-400">Pivot, XLOOKUP, Nested Formulas</span>
+                  </div>
+                  <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-emerald-400 h-1.5 rounded-full w-[90%]"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between font-medium text-white mb-1">
+                    <span>Word & PowerPoint</span>
+                    <span class="text-white/60">Slide & Báo cáo chuyên nghiệp</span>
+                  </div>
+                  <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-white/40 h-1.5 rounded-full w-[85%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Languages -->
+            <div class="liquid-glass p-5 rounded-2xl space-y-3">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Foreign Language (Ngoại ngữ)</h3>
+              <div class="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5">
+                <div>
+                  <div class="text-sm font-semibold text-white">IELTS 7.0</div>
+                  <div class="text-xs text-white/60">Tiếng Anh chuyên ngành Kinh tế - Tài chính - Kiểm toán</div>
+                </div>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300">
+                  Thành thạo
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 5: CONTACT -->
+        <div id="tab-content-contact" class="tab-pane hidden space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <a href="mailto:anhphuongap198@gmail.com" class="liquid-glass p-5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all group">
+              <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white/80 group-hover:text-emerald-400">
+                <i data-lucide="mail" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-white/50 uppercase tracking-wider">Email liên hệ</div>
+                <div class="text-sm font-medium text-white group-hover:text-emerald-300">anhphuongap198@gmail.com</div>
+              </div>
+            </a>
+
+            <a href="tel:0345746254" class="liquid-glass p-5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all group">
+              <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white/80 group-hover:text-emerald-400">
+                <i data-lucide="phone" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-white/50 uppercase tracking-wider">Số điện thoại</div>
+                <div class="text-sm font-medium text-white group-hover:text-emerald-300">0345 746 254</div>
+              </div>
+            </a>
+
+            <div class="liquid-glass p-5 rounded-2xl flex items-center gap-4">
+              <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white/80">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-white/50 uppercase tracking-wider">Địa chỉ</div>
+                <div class="text-sm font-medium text-white">Hà Nội, Việt Nam</div>
+              </div>
+            </div>
+
+            <a href="https://facebook.com/nguyenthianhphuong145" target="_blank" rel="noopener noreferrer" class="liquid-glass p-5 rounded-2xl flex items-center gap-4 hover:bg-white/5 transition-all group">
+              <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center text-white/80 group-hover:text-emerald-400">
+                <i data-lucide="facebook" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="text-xs text-white/50 uppercase tracking-wider">Facebook cá nhân</div>
+                <div class="text-sm font-medium text-white group-hover:text-emerald-300">facebook.com/nguyenthianhphuong145</div>
+              </div>
+            </a>
+
+          </div>
+
+          <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center">
+            <p class="text-xs text-emerald-300">
+              "Rất hân hạnh được kết nối và trao đổi các cơ hội nghề nghiệp trong lĩnh vực Kiểm toán & Tài chính!"
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 sm:px-8 py-4 border-t border-white/10 flex items-center justify-between text-xs text-white/40">
+        <span>Measured Experience &bull; FTU Student Portfolio</span>
+        <button onclick="closePortfolio()" class="liquid-glass px-4 py-1.5 rounded-full text-white/80 hover:text-white transition-colors">
+          Đóng cửa sổ
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== SCRIPT: INTERACTION & SPOTLIGHT ANIMATION ==================== -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // ==================== SPOTLIGHT REVEAL & GRID PARALLAX ====================
+    const heroSection = document.getElementById('heroSection');
+    const spotlightLayer = document.getElementById('spotlightRevealLayer');
+    const gridBg = document.getElementById('gridBg');
+    const canvas = document.getElementById('maskCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight * 0.7; // start in the lower portion
+    let smoothX = mouseX;
+    let smoothY = mouseY;
+    let gridSmoothX = 0;
+    let gridSmoothY = 0;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Touch support for spotlight
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    function renderLoop() {
+      // Lerp smoothing: smooth += (target - smooth) * 0.1
+      smoothX += (mouseX - smoothX) * 0.1;
+      smoothY += (mouseY - smoothY) * 0.1;
+
+      // Parallax Grid calculation: offset = (cursor relative to section center) * 16, eased at 0.06
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const targetGridX = ((mouseX - centerX) / centerX) * 16;
+      const targetGridY = ((mouseY - centerY) / centerY) * 16;
+      gridSmoothX += (targetGridX - gridSmoothX) * 0.06;
+      gridSmoothY += (targetGridY - gridSmoothY) * 0.06;
+      gridBg.style.transform = `translate3d(${gridSmoothX}px, ${gridSmoothY}px, 0)`;
+
+      // Spotlight Radial Mask
+      // Radius: 260px
+      // Stops: 0-40% 1 (white), 60% 0.75, 75% 0.4, 88% 0.12, 100% 0 (transparent)
+      const maskGradient = `radial-gradient(circle 260px at ${smoothX.toFixed(1)}px ${smoothY.toFixed(1)}px, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 40%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.12) 88%, rgba(255,255,255,0) 100%)`;
+
+      spotlightLayer.style.webkitMaskImage = maskGradient;
+      spotlightLayer.style.maskImage = maskGradient;
+
+      requestAnimationFrame(renderLoop);
+    }
+    requestAnimationFrame(renderLoop);
+
+
+    // ==================== MOBILE MENU HANDLERS ====================
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+    const menuItems = document.querySelectorAll('.menu-item-enter');
+
+    function toggleMobileMenu(open) {
+      if (open) {
+        mobileMenu.classList.remove('hidden');
+        mobileMenu.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => {
+          mobileCloseBtn.classList.add('show');
+          menuItems.forEach(item => item.classList.add('show'));
+        }, 30);
+      } else {
+        mobileCloseBtn.classList.remove('show');
+        menuItems.forEach(item => item.classList.remove('show'));
+        setTimeout(() => {
+          mobileMenu.classList.remove('flex');
+          mobileMenu.classList.add('hidden');
+          document.body.style.overflow = '';
+        }, 350);
+      }
+    }
+
+    function handleMobileNavClick(tab) {
+      toggleMobileMenu(false);
+      setTimeout(() => {
+        openPortfolio(tab);
+      }, 400);
+    }
+
+
+    // ==================== PORTFOLIO MODAL & TABS ====================
+    const modal = document.getElementById('portfolioModal');
+
+    function openPortfolio(tabName = 'profile') {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      switchTab(tabName);
+    }
+
+    function closePortfolio() {
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closePortfolio();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePortfolio();
+        toggleMobileMenu(false);
+      }
+    });
+
+    function switchTab(tabId) {
+      const tabs = ['profile', 'experience', 'education', 'skills', 'contact'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const content = document.getElementById(`tab-content-${t}`);
+        if (t === tabId) {
+          btn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-medium text-white bg-white/10 whitespace-nowrap transition-all shadow-sm';
+          content.classList.remove('hidden');
+        } else {
+          btn.className = 'tab-btn px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white hover:bg-white/5 whitespace-nowrap transition-all';
+          content.classList.add('hidden');
+        }
+      });
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
